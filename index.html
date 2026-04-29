@@ -738,8 +738,12 @@ function buildCharts(data){
 }
 
 const URL_MAP={
-  'Botox':'https://www.instagram.com/p/DL8K9CeAEJO/',
-  'Bioestimulador':'https://www.instagram.com/p/DL8LVv7gQCH/',
+  'Eng. Frio':    ['https://www.instagram.com/p/DL8K9CeAEJO/','https://www.instagram.com/p/DL8LVv7gQCH/','https://www.instagram.com/p/DMLq7fugiyZ/','https://www.instagram.com/p/DMLr82VgDiJ/','https://www.instagram.com/p/DMLrOgsAAA5/','https://www.instagram.com/p/DMduH0UAg1a/','https://www.instagram.com/p/DMduHLIA5d0/'],
+  'Eng. Quente':  ['https://www.instagram.com/p/DMdsN5VAcEA/','https://www.instagram.com/p/DMdsOdSAg77/','https://www.instagram.com/p/DMdsOwug47i/','https://www.instagram.com/p/DMdtxTogIJ_/','https://www.instagram.com/p/DMdtyWLA8pc/','https://www.instagram.com/p/DOErTvWgKun/','https://www.instagram.com/p/DOErTxTAOeE/','https://www.instagram.com/p/DOcTrinAIAm/','https://www.instagram.com/p/DRah4vaALHy/'],
+  'Bioestimulador':['https://www.instagram.com/p/DUk-811gJQn/','https://www.instagram.com/p/DVAEd6wgKnq/'],
+  'Botox':        ['https://www.instagram.com/p/DW-SULkACUA/','https://www.instagram.com/p/DWh7mU1AHva/'],
+  'Celulite':     ['https://www.instagram.com/p/DTQmeBXgFdm/'],
+  'Gluteos':      ['https://www.instagram.com/p/DW-SDemAC5t/'],
 };
 function buildTable(data){
   const sorted=[...data].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
@@ -747,8 +751,12 @@ function buildTable(data){
   document.getElementById('gtbody').innerHTML=sorted.map(r=>{
     const cpl=r.leads>0?r.invest/r.leads:null;
     const ds=r.date.slice(8)+'/'+r.date.slice(5,7);
-    const url=URL_MAP[r.camp];
-    const verBtn=url?`<a class="abtn" href="${url}" target="_blank">Ver ↗</a>`:`<span class="abtn" style="opacity:.25;cursor:default">Ver</span>`;
+    const urls=URL_MAP[r.camp]||[];
+    const verBtn=urls.length===0
+      ?`<span class="abtn" style="opacity:.25;cursor:default">Ver</span>`
+      :urls.length===1
+        ?`<a class="abtn" href="${urls[0]}" target="_blank">Ver ↗</a>`
+        :urls.map((u,i)=>`<a class="abtn" href="${u}" target="_blank" style="margin-right:3px">Ad${i+1} ↗</a>`).join('');
     return `<tr><td>${ds}</td><td><span class="bp ${cbMap[r.camp]||'pf'}">${r.camp}</span></td><td>${BRL(r.invest)}</td><td style="color:#5eead4;font-weight:800">${r.leads}</td><td>${BRL(cpl)}</td><td>${verBtn}</td></tr>`;
   }).join('');
 }
