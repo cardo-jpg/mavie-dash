@@ -737,13 +737,18 @@ function buildCharts(data){
   ch2=new Chart(document.getElementById('chLeads'),{type:'doughnut',data:{labels:campLabels,datasets:[{data:lbc,backgroundColor:['rgba(196,162,78,.8)','rgba(52,211,153,.8)','rgba(96,165,250,.8)','rgba(192,132,252,.8)','rgba(167,139,250,.7)'],borderColor:'#080604',borderWidth:3,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{datalabels:{display:false},legend:{position:'bottom',labels:{color:'#6b5a38',font:{family:'Nunito',size:10},padding:10,boxWidth:10}},tooltip:{backgroundColor:'#0f0c08',titleColor:'#C4A24E',bodyColor:'#EDE3CB',borderColor:'#251e10',borderWidth:1}}}});
 }
 
+const URL_MAP={
+  'Botox':'https://www.instagram.com/p/DL8K9CeAEJO/',
+  'Bioestimulador':'https://www.instagram.com/p/DL8LVv7gQCH/',
+};
 function buildTable(data){
   const sorted=[...data].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
   const cbMap={'Eng. Quente':'pq','Eng. Frio':'pf','Bioestimulador':'pbio','Botox':'pbtx','Celulite':'pcel','Gluteos':'pglu'};
   document.getElementById('gtbody').innerHTML=sorted.map(r=>{
     const cpl=r.leads>0?r.invest/r.leads:null;
     const ds=r.date.slice(8)+'/'+r.date.slice(5,7);
-    const verBtn=r.url?`<a class="abtn" href="${r.url}" target="_blank">Ver ↗</a>`:`<span class="abtn" style="opacity:.3;cursor:default">Ver</span>`;
+    const url=URL_MAP[r.camp];
+    const verBtn=url?`<a class="abtn" href="${url}" target="_blank">Ver ↗</a>`:`<span class="abtn" style="opacity:.25;cursor:default">Ver</span>`;
     return `<tr><td>${ds}</td><td><span class="bp ${cbMap[r.camp]||'pf'}">${r.camp}</span></td><td>${BRL(r.invest)}</td><td style="color:#5eead4;font-weight:800">${r.leads}</td><td>${BRL(cpl)}</td><td>${verBtn}</td></tr>`;
   }).join('');
 }
