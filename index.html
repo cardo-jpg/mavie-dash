@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Mavie Harmonizações — Dashboard Meta Ads</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+:root{
+  --bg:#0a0806;
+  --bg2:#100d08;
+  --card:#141008;
+  --card2:#1c1710;
+  --brd:#2e2518;
+  --gold:#C9A65A;
+  --gold2:#E8C97A;
+  --gold3:#8B6E30;
+  --wh:#F0E6CC;
+  --mu:#7a6840;
+  --mu2:#4a3d22;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--wh);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 38px,rgba(201,166,90,0.025) 38px,rgba(201,166,90,0.025) 40px);pointer-events:none;z-index:0;}
+
+/* gradient line */
+.gl{height:2px;background:linear-gradient(90deg,var(--gold3),var(--gold),var(--gold2),var(--gold),var(--gold3));background-size:300% 100%;animation:gm 4s linear infinite;}
+@keyframes gm{0%{background-position:0%}100%{background-position:300%}}
+
+/* header */
+header{position:relative;z-index:1;background:linear-gradient(135deg,#0a0806 0%,#1a1408 50%,#0a0806 100%);border-bottom:1px solid var(--brd);}
+.hi{max-width:1340px;margin:0 auto;padding:22px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.hl{display:flex;align-items:center;gap:18px;}
+.logo-wrap{width:62px;height:62px;border-radius:50%;border:2px solid var(--gold3);display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#1f1808,#0a0806);box-shadow:0 0 24px rgba(201,166,90,0.25),inset 0 0 12px rgba(201,166,90,0.1);}
+.logo-wrap img{width:62px;height:62px;border-radius:50%;object-fit:cover;}
+.logo-m{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--gold);line-height:1;}
+.ht .client{font-size:0.6rem;font-weight:700;color:var(--mu);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.ht h1{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;}
+.ht .sub{font-size:0.62rem;color:var(--mu);margin-top:4px;letter-spacing:.5px;}
+
+/* period tabs */
+.tabs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.ptab{background:var(--card2);border:1px solid var(--brd);color:var(--mu);font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all .2s;letter-spacing:.5px;}
+.ptab:hover,.ptab.active{background:var(--gold);border-color:var(--gold);color:#0a0806;}
+.daterange{display:flex;gap:6px;align-items:center;}
+.daterange input{background:var(--card2);border:1px solid var(--brd);color:var(--wh);font-family:'Nunito',sans-serif;font-size:.68rem;padding:5px 10px;border-radius:6px;width:120px;}
+.daterange input:focus{outline:1px solid var(--gold);}
+.daterange button{background:var(--gold);border:none;color:#0a0806;font-size:.68rem;font-weight:800;padding:6px 12px;border-radius:6px;cursor:pointer;}
+
+/* main */
+main{max-width:1340px;margin:0 auto;padding:28px 32px 60px;}
+.slbl{font-size:.6rem;font-weight:800;color:var(--gold3);letter-spacing:2px;text-transform:uppercase;margin:28px 0 14px;padding-left:2px;}
+
+/* kpi strip */
+.kstrip{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:8px;}
+.kcard{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:18px 16px;position:relative;overflow:hidden;}
+.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0;background:var(--gold);}
+.kcard.gr::before{background:#2dd4bf;}
+.kcard.pu::before{background:#a78bfa;}
+.kcard.or::before{background:#fb923c;}
+.klbl{font-size:.58rem;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--mu);margin-bottom:8px;}
+.kval{font-size:1.4rem;font-weight:900;letter-spacing:-.5px;color:var(--gold);}
+.kcard.gr .kval{color:#2dd4bf;}
+.kcard.pu .kval{color:#a78bfa;}
+.kcard.or .kval{color:#fb923c;}
+.ksub{font-size:.57rem;color:var(--mu2);margin-top:6px;line-height:1.4;}
+
+/* campaign cards */
+.crow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.ccard{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:18px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.ccard:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(201,166,90,.15);}
+.ccard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0;}
+.cc-quente::before{background:var(--gold);}
+.cc-bio::before{background:#34d399;}
+.cc-botox::before{background:#60a5fa;}
+.cc-cg::before{background:#f472b6;}
+.cc-total::before{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.cc-name{font-size:.58rem;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:12px;}
+.cc-name.quente{color:var(--gold);}
+.cc-name.bio{color:#34d399;}
+.cc-name.botox{color:#60a5fa;}
+.cc-name.cg{color:#f472b6;}
+.cc-name.total{background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.cc-row{display:flex;justify-content:space-between;margin-bottom:6px;}
+.cc-lbl{font-size:.57rem;color:var(--mu);font-weight:600;}
+.cc-val{font-size:.75rem;font-weight:800;color:var(--wh);}
+.cc-invest{font-size:1.1rem;font-weight:900;color:var(--wh);margin-bottom:4px;}
+.cc-sub{font-size:.57rem;color:var(--mu);margin-bottom:10px;}
+.cc-pb{background:var(--brd);border-radius:4px;height:4px;margin-top:10px;overflow:hidden;}
+.cc-pb-inner{height:100%;border-radius:4px;background:var(--gold);transition:width .6s;}
+
+/* charts */
+.chrow{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+.chcard{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:22px 20px;}
+.chtitle{font-size:.78rem;font-weight:800;color:var(--wh);margin-bottom:2px;}
+.chsub{font-size:.6rem;color:var(--mu);margin-bottom:18px;}
+
+/* funnel */
+.funnel{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.fsteps{display:flex;flex-direction:column;gap:0;}
+.fstep{background:var(--card2);border:1px solid var(--brd);border-radius:8px;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;}
+.fstep-1{border-left:3px solid var(--gold);}
+.fstep-2{border-left:3px solid #60a5fa;}
+.fstep-3{border-left:3px solid #34d399;}
+.fslbl{font-size:.65rem;font-weight:700;color:var(--mu);}
+.fsval{font-size:1rem;font-weight:900;color:var(--wh);}
+.farrow{font-size:.62rem;color:var(--mu);padding:6px 18px;text-align:center;}
+.frates{display:flex;flex-direction:column;gap:12px;justify-content:center;}
+.frate{background:var(--card2);border:1px solid var(--brd);border-radius:8px;padding:12px 16px;}
+.frate-l{font-size:.58rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:4px;}
+.frate-v{font-size:1.1rem;font-weight:900;color:var(--gold);}
+.frate-d{font-size:.57rem;color:var(--mu2);margin-top:2px;}
+
+/* table */
+.tw{overflow-x:auto;background:var(--card);border:1px solid var(--brd);border-radius:12px;}
+table{width:100%;border-collapse:collapse;font-size:.72rem;}
+thead{background:var(--card2);}
+thead th{padding:11px 14px;font-size:.58rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--mu);text-align:left;border-bottom:1px solid var(--brd);}
+tbody tr{border-bottom:1px solid var(--brd);transition:background .15s;}
+tbody tr:hover{background:var(--card2);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:10px 14px;color:var(--wh);}
+td:nth-child(n+3){text-align:right;font-variant-numeric:tabular-nums;}
+
+/* badge */
+.bp{display:inline-block;font-size:.55rem;font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:4px;text-transform:uppercase;}
+.pq{background:rgba(201,166,90,.18);color:var(--gold);}
+.pf{background:rgba(201,166,90,.08);color:var(--mu);}
+.pbio{background:rgba(52,211,153,.15);color:#34d399;}
+.pbtx{background:rgba(96,165,250,.15);color:#60a5fa;}
+.pcel{background:rgba(244,114,182,.15);color:#f472b6;}
+.pglu{background:rgba(167,139,250,.15);color:#a78bfa;}
+
+@media(max-width:1100px){
+  .crow{grid-template-columns:repeat(3,1fr);}
+  .kstrip{grid-template-columns:repeat(3,1fr);}
+  .chrow{grid-template-columns:1fr;}
+  .funnel{grid-template-columns:1fr;}
+}
+@media(max-width:700px){
+  .crow{grid-template-columns:1fr 1fr;}
+  .kstrip{grid-template-columns:1fr 1fr;}
+  main{padding:20px 16px 40px;}
+  .hi{padding:16px;}
+}
+</style>
+</head>
+<body>
+<div class="gl"></div>
+<header>
+  <div class="hi">
+    <div class="hl">
+      <div class="logo-wrap">
+        <span class="logo-m">M</span>
+      </div>
+      <div class="ht">
+        <div class="client">Meta Ads · Dashboard</div>
+        <h1>Mavie Harmonizações</h1>
+        <div class="sub">Engajamento · Bioestimulador · Botox · Celulite · Glúteos</div>
+      </div>
+    </div>
+    <div class="tabs" id="tabsWrap">
+      <button class="ptab" onclick="setPreset(7,this)">7d</button>
+      <button class="ptab" onclick="setPreset(14,this)">14d</button>
+      <button class="ptab" onclick="setPreset(30,this)">30d</button>
+      <button class="ptab" onclick="setPreset(90,this)">90d</button>
+      <button class="ptab active" onclick="setPreset('all',this)">Tudo</button>
+      <div class="daterange">
+        <input type="date" id="dtFrom"/>
+        <input type="date" id="dtTo"/>
+        <button onclick="setCustomRange()">OK</button>
+      </div>
+    </div>
+  </div>
+</header>
+<main>
+
+<!-- KPI STRIP -->
+<div class="slbl">Resumo Geral</div>
+<div class="kstrip">
+  <div class="kcard"><div class="klbl">Investimento</div><div class="kval" id="kI">—</div><div class="ksub" id="kIs">—</div></div>
+  <div class="kcard"><div class="klbl">Impressões</div><div class="kval" id="kIm">—</div><div class="ksub" id="kIms">—</div></div>
+  <div class="kcard gr"><div class="klbl">Cliques</div><div class="kval" id="kC">—</div><div class="ksub" id="kCs">—</div></div>
+  <div class="kcard pu"><div class="klbl">Leads</div><div class="kval" id="kL">—</div><div class="ksub" id="kLs">—</div></div>
+  <div class="kcard or"><div class="klbl">CPC Médio</div><div class="kval" id="kCpc">—</div><div class="ksub">custo por clique</div></div>
+  <div class="kcard"><div class="klbl">CPL Médio</div><div class="kval" id="kCpl">—</div><div class="ksub">custo por lead</div></div>
+</div>
+
+<!-- CAMP CARDS -->
+<div class="slbl">Distribuição por Campanha</div>
+<div class="crow">
+  <div class="ccard cc-quente">
+    <div class="cc-name quente">Eng. Quente</div>
+    <div class="cc-invest" id="cQi">—</div>
+    <div class="cc-sub" id="cQd">—</div>
+    <div class="cc-row"><span class="cc-lbl">Cliques</span><span class="cc-val" id="cQc">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Leads</span><span class="cc-val" id="cQl">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Impressões</span><span class="cc-val" id="cQm">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">CPL</span><span class="cc-val" id="cQp">—</span></div>
+    <div class="cc-pb"><div class="cc-pb-inner" id="cQb"></div></div>
+  </div>
+  <div class="ccard cc-bio">
+    <div class="cc-name bio">Bioestimulador</div>
+    <div class="cc-invest" id="cBi">—</div>
+    <div class="cc-sub" id="cBd">—</div>
+    <div class="cc-row"><span class="cc-lbl">Cliques</span><span class="cc-val" id="cBc">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Leads</span><span class="cc-val" id="cBl">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Impressões</span><span class="cc-val" id="cBm">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">CPL</span><span class="cc-val" id="cBp">—</span></div>
+    <div class="cc-pb"><div class="cc-pb-inner" style="background:#34d399" id="cBb"></div></div>
+  </div>
+  <div class="ccard cc-botox">
+    <div class="cc-name botox">Botox</div>
+    <div class="cc-invest" id="cXi">—</div>
+    <div class="cc-sub" id="cXd">—</div>
+    <div class="cc-row"><span class="cc-lbl">Cliques</span><span class="cc-val" id="cXc">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Leads</span><span class="cc-val" id="cXl">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Impressões</span><span class="cc-val" id="cXm">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">CPL</span><span class="cc-val" id="cXp">—</span></div>
+    <div class="cc-pb"><div class="cc-pb-inner" style="background:#60a5fa" id="cXb"></div></div>
+  </div>
+  <div class="ccard cc-cg">
+    <div class="cc-name cg">Celulite &amp; Glúteos</div>
+    <div class="cc-invest" id="cGi">—</div>
+    <div class="cc-sub" id="cGd">—</div>
+    <div class="cc-row"><span class="cc-lbl">Cliques</span><span class="cc-val" id="cGc">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Leads</span><span class="cc-val" id="cGl">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Impressões</span><span class="cc-val" id="cGm">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">CPL</span><span class="cc-val" id="cGp">—</span></div>
+    <div class="cc-pb"><div class="cc-pb-inner" style="background:#f472b6" id="cGb"></div></div>
+  </div>
+  <div class="ccard cc-total">
+    <div class="cc-name total">Total Geral</div>
+    <div class="cc-invest" id="cTi">—</div>
+    <div class="cc-sub" id="cTd">—</div>
+    <div class="cc-row"><span class="cc-lbl">Cliques</span><span class="cc-val" id="cTc">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Leads</span><span class="cc-val" id="cTl">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">Impressões</span><span class="cc-val" id="cTm">—</span></div>
+    <div class="cc-row"><span class="cc-lbl">CPL</span><span class="cc-val" id="cTp">—</span></div>
+    <div class="cc-pb"><div class="cc-pb-inner" style="background:linear-gradient(90deg,#C9A65A,#E8C97A)" id="cTb"></div></div>
+  </div>
+</div>
+
+<!-- FUNNEL -->
+<div class="slbl">Funil de Conversão</div>
+<div class="funnel">
+  <div>
+    <div style="font-size:.95rem;font-weight:800;color:var(--wh);margin-bottom:3px;">Jornada do Lead</div>
+    <div style="font-size:.68rem;color:var(--mu);margin-bottom:18px;">Impressão &rarr; Clique &rarr; Lead</div>
+    <div class="fsteps">
+      <div class="fstep fstep-1"><span class="fslbl">&#128065; Impressões</span><span class="fsval" id="fI">—</span></div>
+      <div class="farrow">CTR: <b id="fCtr" style="color:var(--gold)">—</b></div>
+      <div class="fstep fstep-2"><span class="fslbl">&#128432; Cliques</span><span class="fsval" id="fC">—</span></div>
+      <div class="farrow">Conv: <b id="fConv" style="color:var(--gold)">—</b></div>
+      <div class="fstep fstep-3"><span class="fslbl">&#10003; Leads</span><span class="fsval" id="fL">—</span></div>
+    </div>
+  </div>
+  <div class="frates">
+    <div class="frate"><div class="frate-l">CTR</div><div class="frate-v" id="frCtr">—</div><div class="frate-d">Taxa de clique sobre impressão</div></div>
+    <div class="frate"><div class="frate-l">Conv. Rate</div><div class="frate-v" id="frConv">—</div><div class="frate-d">Taxa de lead sobre clique</div></div>
+    <div class="frate"><div class="frate-l">CPC Médio</div><div class="frate-v" id="frCpc">—</div><div class="frate-d">Custo médio por clique</div></div>
+    <div class="frate"><div class="frate-l">CPL</div><div class="frate-v" id="frCpl">—</div><div class="frate-d">Custo médio por lead</div></div>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="slbl">Evolução Diária</div>
+<div class="chrow">
+  <div class="chcard"><div class="chtitle">Investimento e Cliques por Dia</div><div class="chsub">Todas as campanhas</div><canvas id="chDaily" height="90"></canvas></div>
+  <div class="chcard"><div class="chtitle">Leads por Campanha</div><div class="chsub">Período selecionado</div><canvas id="chLeads" height="180"></canvas></div>
+</div>
+
+<!-- TABLE -->
+<div class="slbl">Dados Detalhados</div>
+<div class="tw">
+  <table>
+    <thead><tr><th>Data</th><th>Campanha</th><th>Investimento</th><th>Impressões</th><th>Cliques</th><th>Leads</th><th>CPC</th><th>CPL</th></tr></thead>
+    <tbody id="gtbody"></tbody>
+  </table>
+</div>
+
+</main>
+<div class="gl"></div>
+
+<script>
+// 383 rows
+const RAW=[
+  {date:'2025-07-16',camp:'Eng. Frio',invest:17.15,imp:559,clk:2,leads:0},
+  {date:'2025-07-16',camp:'Eng. Frio',invest:3.89,imp:147,clk:4,leads:2},
+  {date:'2025-07-17',camp:'Eng. Frio',invest:17.01,imp:860,clk:4,leads:0},
+  {date:'2025-07-17',camp:'Eng. Frio',invest:9.20,imp:271,clk:1,leads:1},
+  {date:'2025-07-18',camp:'Eng. Frio',invest:16.64,imp:731,clk:3,leads:2},
+  {date:'2025-07-18',camp:'Eng. Frio',invest:11.58,imp:337,clk:4,leads:3},
+  {date:'2025-07-19',camp:'Eng. Frio',invest:16.92,imp:532,clk:6,leads:1},
+  {date:'2025-07-19',camp:'Eng. Frio',invest:7.72,imp:264,clk:1,leads:1},
+  {date:'2025-07-20',camp:'Eng. Frio',invest:8.91,imp:290,clk:4,leads:2},
+  {date:'2025-07-20',camp:'Eng. Frio',invest:7.69,imp:246,clk:0,leads:0},
+  {date:'2025-07-21',camp:'Eng. Frio',invest:12.83,imp:481,clk:1,leads:0},
+  {date:'2025-07-21',camp:'Eng. Frio',invest:17.12,imp:389,clk:4,leads:3},
+  {date:'2025-07-22',camp:'Eng. Frio',invest:13.71,imp:468,clk:5,leads:5},
+  {date:'2025-07-22',camp:'Eng. Frio',invest:12.04,imp:453,clk:5,leads:3},
+  {date:'2025-07-23',camp:'Eng. Frio',invest:4.37,imp:127,clk:1,leads:1},
+  {date:'2025-07-23',camp:'Eng. Frio',invest:4.97,imp:174,clk:1,leads:0},
+  {date:'2025-07-23',camp:'Eng. Frio',invest:4.63,imp:189,clk:2,leads:0},
+  {date:'2025-07-23',camp:'Eng. Quente',invest:0.07,imp:6,clk:0,leads:0},
+  {date:'2025-07-23',camp:'Eng. Quente',invest:4.01,imp:202,clk:1,leads:1},
+  {date:'2025-07-24',camp:'Eng. Frio',invest:25.42,imp:1032,clk:4,leads:2},
+  {date:'2025-07-24',camp:'Eng. Quente',invest:17.44,imp:290,clk:1,leads:0},
+  {date:'2025-07-24',camp:'Eng. Quente',invest:12.92,imp:845,clk:2,leads:2},
+  {date:'2025-07-25',camp:'Eng. Frio',invest:8.12,imp:474,clk:1,leads:1},
+  {date:'2025-07-25',camp:'Eng. Quente',invest:11.40,imp:230,clk:2,leads:0},
+  {date:'2025-07-25',camp:'Eng. Quente',invest:7.66,imp:448,clk:1,leads:1},
+  {date:'2025-07-26',camp:'Eng. Frio',invest:9.93,imp:716,clk:5,leads:0},
+  {date:'2025-07-26',camp:'Eng. Quente',invest:3.31,imp:75,clk:0,leads:0},
+  {date:'2025-07-26',camp:'Eng. Quente',invest:7.24,imp:455,clk:1,leads:0},
+  {date:'2025-07-27',camp:'Eng. Frio',invest:16.87,imp:795,clk:2,leads:1},
+  {date:'2025-07-27',camp:'Eng. Quente',invest:9.09,imp:250,clk:0,leads:0},
+  {date:'2025-07-27',camp:'Eng. Quente',invest:5.03,imp:230,clk:2,leads:1},
+  {date:'2025-07-28',camp:'Eng. Frio',invest:19.84,imp:861,clk:7,leads:0},
+  {date:'2025-07-28',camp:'Eng. Quente',invest:8.79,imp:156,clk:0,leads:0},
+  {date:'2025-07-28',camp:'Eng. Quente',invest:16.12,imp:627,clk:2,leads:3},
+  {date:'2025-07-29',camp:'Eng. Frio',invest:15.13,imp:693,clk:1,leads:2},
+  {date:'2025-07-29',camp:'Eng. Quente',invest:14.40,imp:576,clk:3,leads:1},
+  {date:'2025-07-30',camp:'Eng. Frio',invest:10.52,imp:381,clk:1,leads:0},
+  {date:'2025-07-30',camp:'Eng. Quente',invest:9.65,imp:462,clk:1,leads:2},
+  {date:'2025-07-31',camp:'Eng. Frio',invest:16.84,imp:666,clk:5,leads:3},
+  {date:'2025-07-31',camp:'Eng. Quente',invest:7.90,imp:324,clk:3,leads:0},
+  {date:'2025-08-01',camp:'Eng. Frio',invest:13.76,imp:603,clk:0,leads:0},
+  {date:'2025-08-01',camp:'Eng. Quente',invest:8.08,imp:417,clk:2,leads:0},
+  {date:'2025-08-02',camp:'Eng. Frio',invest:11.72,imp:490,clk:1,leads:0},
+  {date:'2025-08-02',camp:'Eng. Quente',invest:8.10,imp:394,clk:0,leads:0},
+  {date:'2025-08-03',camp:'Eng. Frio',invest:10.66,imp:346,clk:2,leads:0},
+  {date:'2025-08-03',camp:'Eng. Quente',invest:9.48,imp:288,clk:2,leads:3},
+  {date:'2025-08-04',camp:'Eng. Frio',invest:25.07,imp:595,clk:4,leads:1},
+  {date:'2025-08-04',camp:'Eng. Quente',invest:9.27,imp:164,clk:0,leads:1},
+  {date:'2025-08-05',camp:'Eng. Frio',invest:24.19,imp:498,clk:3,leads:1},
+  {date:'2025-08-05',camp:'Eng. Quente',invest:10.69,imp:444,clk:1,leads:1},
+  {date:'2025-08-06',camp:'Eng. Frio',invest:12.66,imp:369,clk:2,leads:2},
+  {date:'2025-08-06',camp:'Eng. Quente',invest:11.85,imp:445,clk:0,leads:1},
+  {date:'2025-08-07',camp:'Eng. Frio',invest:8.65,imp:246,clk:1,leads:1},
+  {date:'2025-08-07',camp:'Eng. Quente',invest:9.73,imp:462,clk:2,leads:0},
+  {date:'2025-08-08',camp:'Eng. Frio',invest:13.99,imp:317,clk:2,leads:0},
+  {date:'2025-08-08',camp:'Eng. Quente',invest:11.10,imp:533,clk:2,leads:3},
+  {date:'2025-08-09',camp:'Eng. Frio',invest:9.53,imp:308,clk:0,leads:0},
+  {date:'2025-08-09',camp:'Eng. Quente',invest:7.74,imp:492,clk:0,leads:1},
+  {date:'2025-08-10',camp:'Eng. Frio',invest:13.72,imp:337,clk:2,leads:0},
+  {date:'2025-08-10',camp:'Eng. Quente',invest:8.39,imp:482,clk:1,leads:0},
+  {date:'2025-08-11',camp:'Eng. Frio',invest:24.86,imp:910,clk:6,leads:1},
+  {date:'2025-08-11',camp:'Eng. Quente',invest:13.76,imp:455,clk:2,leads:3},
+  {date:'2025-08-12',camp:'Eng. Frio',invest:18.60,imp:725,clk:2,leads:1},
+  {date:'2025-08-12',camp:'Eng. Quente',invest:15.27,imp:467,clk:3,leads:0},
+  {date:'2025-08-13',camp:'Eng. Frio',invest:11.38,imp:338,clk:1,leads:0},
+  {date:'2025-08-13',camp:'Eng. Quente',invest:10.01,imp:366,clk:1,leads:1},
+  {date:'2025-08-14',camp:'Eng. Frio',invest:7.56,imp:295,clk:0,leads:0},
+  {date:'2025-08-14',camp:'Eng. Quente',invest:6.76,imp:264,clk:0,leads:1},
+  {date:'2025-08-15',camp:'Eng. Frio',invest:12.80,imp:491,clk:1,leads:0},
+  {date:'2025-08-15',camp:'Eng. Quente',invest:6.42,imp:255,clk:1,leads:0},
+  {date:'2025-08-16',camp:'Eng. Quente',invest:8.74,imp:311,clk:0,leads:1},
+  {date:'2025-08-17',camp:'Eng. Quente',invest:6.52,imp:293,clk:0,leads:0},
+  {date:'2025-08-18',camp:'Eng. Quente',invest:12.98,imp:492,clk:3,leads:1},
+  {date:'2025-08-19',camp:'Eng. Quente',invest:14.73,imp:546,clk:1,leads:1},
+  {date:'2025-08-20',camp:'Eng. Quente',invest:9.08,imp:383,clk:2,leads:1},
+  {date:'2025-08-21',camp:'Eng. Quente',invest:10.34,imp:452,clk:2,leads:3},
+  {date:'2025-08-22',camp:'Eng. Quente',invest:6.44,imp:226,clk:2,leads:1},
+  {date:'2025-08-23',camp:'Eng. Quente',invest:9.67,imp:439,clk:2,leads:3},
+  {date:'2025-08-24',camp:'Eng. Quente',invest:11.13,imp:550,clk:2,leads:1},
+  {date:'2025-08-25',camp:'Eng. Quente',invest:11.48,imp:509,clk:2,leads:1},
+  {date:'2025-08-26',camp:'Eng. Quente',invest:9.54,imp:422,clk:3,leads:0},
+  {date:'2025-08-27',camp:'Eng. Quente',invest:9.25,imp:374,clk:4,leads:0},
+  {date:'2025-08-28',camp:'Eng. Quente',invest:9.30,imp:508,clk:3,leads:0},
+  {date:'2025-08-29',camp:'Eng. Quente',invest:10.84,imp:451,clk:2,leads:1},
+  {date:'2025-08-30',camp:'Eng. Quente',invest:8.39,imp:425,clk:3,leads:0},
+  {date:'2025-08-31',camp:'Eng. Quente',invest:10.73,imp:415,clk:1,leads:0},
+  {date:'2025-09-01',camp:'Eng. Quente',invest:4.30,imp:185,clk:2,leads:0},
+  {date:'2025-09-01',camp:'Eng. Quente',invest:4.38,imp:226,clk:1,leads:0},
+  {date:'2025-09-02',camp:'Eng. Quente',invest:15.10,imp:513,clk:3,leads:1},
+  {date:'2025-09-03',camp:'Eng. Quente',invest:10.95,imp:352,clk:1,leads:3},
+  {date:'2025-09-04',camp:'Eng. Quente',invest:7.68,imp:247,clk:1,leads:2},
+  {date:'2025-09-05',camp:'Eng. Quente',invest:6.67,imp:228,clk:0,leads:1},
+  {date:'2025-09-06',camp:'Eng. Quente',invest:7.30,imp:399,clk:0,leads:0},
+  {date:'2025-09-07',camp:'Eng. Quente',invest:9.63,imp:408,clk:1,leads:0},
+  {date:'2025-09-08',camp:'Eng. Quente',invest:11.68,imp:458,clk:3,leads:0},
+  {date:'2025-09-09',camp:'Eng. Quente',invest:14.24,imp:429,clk:2,leads:2},
+  {date:'2025-09-10',camp:'Eng. Quente',invest:11.98,imp:370,clk:2,leads:5},
+  {date:'2025-09-11',camp:'Eng. Quente',invest:9.41,imp:405,clk:1,leads:0},
+  {date:'2025-09-12',camp:'Eng. Quente',invest:6.30,imp:269,clk:2,leads:2},
+  {date:'2025-09-13',camp:'Eng. Quente',invest:0.26,imp:8,clk:1,leads:0},
+  {date:'2025-10-07',camp:'Eng. Quente',invest:17.03,imp:668,clk:3,leads:0},
+  {date:'2025-10-08',camp:'Eng. Quente',invest:17.24,imp:665,clk:5,leads:1},
+  {date:'2025-10-09',camp:'Eng. Quente',invest:15.59,imp:755,clk:2,leads:1},
+  {date:'2025-10-10',camp:'Eng. Quente',invest:10.74,imp:487,clk:1,leads:1},
+  {date:'2025-10-11',camp:'Eng. Quente',invest:9.13,imp:454,clk:1,leads:0},
+  {date:'2025-10-12',camp:'Eng. Quente',invest:9.76,imp:475,clk:4,leads:0},
+  {date:'2025-10-13',camp:'Eng. Quente',invest:15.68,imp:658,clk:0,leads:3},
+  {date:'2025-10-14',camp:'Eng. Quente',invest:12.53,imp:484,clk:3,leads:1},
+  {date:'2025-10-15',camp:'Eng. Quente',invest:8.24,imp:372,clk:0,leads:0},
+  {date:'2025-10-16',camp:'Eng. Quente',invest:7.05,imp:299,clk:0,leads:0},
+  {date:'2025-10-17',camp:'Eng. Quente',invest:9.78,imp:320,clk:2,leads:5},
+  {date:'2025-10-18',camp:'Eng. Quente',invest:6.68,imp:367,clk:4,leads:0},
+  {date:'2025-10-19',camp:'Eng. Quente',invest:9.95,imp:385,clk:2,leads:2},
+  {date:'2025-10-20',camp:'Eng. Quente',invest:12.91,imp:526,clk:0,leads:0},
+  {date:'2025-10-21',camp:'Eng. Quente',invest:11.30,imp:476,clk:0,leads:0},
+  {date:'2025-10-22',camp:'Eng. Quente',invest:9.64,imp:376,clk:4,leads:6},
+  {date:'2025-10-23',camp:'Eng. Quente',invest:10.19,imp:263,clk:0,leads:1},
+  {date:'2025-10-24',camp:'Eng. Quente',invest:6.62,imp:314,clk:1,leads:0},
+  {date:'2025-10-25',camp:'Eng. Quente',invest:8.79,imp:382,clk:1,leads:2},
+  {date:'2025-10-26',camp:'Eng. Quente',invest:11.22,imp:411,clk:1,leads:1},
+  {date:'2025-10-27',camp:'Eng. Quente',invest:14.66,imp:491,clk:2,leads:0},
+  {date:'2025-10-28',camp:'Eng. Quente',invest:9.16,imp:388,clk:2,leads:1},
+  {date:'2025-10-29',camp:'Eng. Quente',invest:8.47,imp:373,clk:2,leads:1},
+  {date:'2025-10-30',camp:'Eng. Quente',invest:8.02,imp:281,clk:0,leads:1},
+  {date:'2025-10-31',camp:'Eng. Quente',invest:10.77,imp:482,clk:2,leads:2},
+  {date:'2025-11-01',camp:'Eng. Quente',invest:7.64,imp:470,clk:1,leads:5},
+  {date:'2025-11-02',camp:'Eng. Quente',invest:13.74,imp:562,clk:2,leads:1},
+  {date:'2025-11-03',camp:'Eng. Quente',invest:9.73,imp:438,clk:1,leads:0},
+  {date:'2025-11-04',camp:'Eng. Quente',invest:11.00,imp:457,clk:1,leads:0},
+  {date:'2025-11-05',camp:'Eng. Quente',invest:8.01,imp:410,clk:1,leads:0},
+  {date:'2025-11-06',camp:'Eng. Quente',invest:10.52,imp:441,clk:0,leads:0},
+  {date:'2025-11-07',camp:'Eng. Quente',invest:9.13,imp:391,clk:1,leads:0},
+  {date:'2025-11-08',camp:'Eng. Quente',invest:7.41,imp:267,clk:0,leads:2},
+  {date:'2025-11-09',camp:'Eng. Quente',invest:10.16,imp:480,clk:2,leads:0},
+  {date:'2025-11-10',camp:'Eng. Quente',invest:11.20,imp:510,clk:1,leads:0},
+  {date:'2025-11-11',camp:'Eng. Quente',invest:12.72,imp:568,clk:1,leads:1},
+  {date:'2025-11-12',camp:'Eng. Quente',invest:13.84,imp:405,clk:0,leads:2},
+  {date:'2025-11-13',camp:'Eng. Quente',invest:8.26,imp:311,clk:0,leads:0},
+  {date:'2025-11-14',camp:'Eng. Quente',invest:7.30,imp:240,clk:0,leads:1},
+  {date:'2025-11-15',camp:'Eng. Quente',invest:6.28,imp:310,clk:2,leads:0},
+  {date:'2025-11-16',camp:'Eng. Quente',invest:12.74,imp:587,clk:4,leads:1},
+  {date:'2025-11-17',camp:'Eng. Quente',invest:11.89,imp:519,clk:1,leads:1},
+  {date:'2025-11-18',camp:'Eng. Quente',invest:14.26,imp:437,clk:1,leads:1},
+  {date:'2025-11-19',camp:'Eng. Quente',invest:11.28,imp:335,clk:3,leads:1},
+  {date:'2025-11-20',camp:'Eng. Quente',invest:9.37,imp:314,clk:1,leads:0},
+  {date:'2025-11-21',camp:'Eng. Quente',invest:4.04,imp:143,clk:0,leads:0},
+  {date:'2025-11-22',camp:'Eng. Quente',invest:6.32,imp:332,clk:1,leads:0},
+  {date:'2025-11-23',camp:'Eng. Quente',invest:11.08,imp:378,clk:2,leads:0},
+  {date:'2025-11-24',camp:'Eng. Quente',invest:10.51,imp:602,clk:2,leads:0},
+  {date:'2025-11-25',camp:'Eng. Quente',invest:9.89,imp:647,clk:1,leads:2},
+  {date:'2025-11-26',camp:'Eng. Quente',invest:5.93,imp:310,clk:0,leads:1},
+  {date:'2025-11-27',camp:'Eng. Quente',invest:4.75,imp:294,clk:0,leads:0},
+  {date:'2025-11-27',camp:'Eng. Quente',invest:11.88,imp:510,clk:1,leads:2},
+  {date:'2025-11-28',camp:'Eng. Quente',invest:6.40,imp:230,clk:0,leads:0},
+  {date:'2025-11-28',camp:'Eng. Quente',invest:11.85,imp:355,clk:2,leads:2},
+  {date:'2025-11-29',camp:'Eng. Quente',invest:5.17,imp:254,clk:0,leads:1},
+  {date:'2025-11-29',camp:'Eng. Quente',invest:11.70,imp:395,clk:2,leads:0},
+  {date:'2025-11-30',camp:'Eng. Quente',invest:6.91,imp:368,clk:1,leads:0},
+  {date:'2025-11-30',camp:'Eng. Quente',invest:4.35,imp:225,clk:1,leads:0},
+  {date:'2025-12-01',camp:'Eng. Quente',invest:10.36,imp:491,clk:2,leads:1},
+  {date:'2025-12-01',camp:'Eng. Quente',invest:11.13,imp:456,clk:2,leads:1},
+  {date:'2025-12-02',camp:'Eng. Quente',invest:9.16,imp:472,clk:0,leads:1},
+  {date:'2025-12-02',camp:'Eng. Quente',invest:10.91,imp:398,clk:1,leads:1},
+  {date:'2025-12-03',camp:'Eng. Quente',invest:7.10,imp:419,clk:0,leads:0},
+  {date:'2025-12-03',camp:'Eng. Quente',invest:7.73,imp:372,clk:0,leads:0},
+  {date:'2025-12-04',camp:'Eng. Quente',invest:3.56,imp:222,clk:1,leads:1},
+  {date:'2025-12-04',camp:'Eng. Quente',invest:2.91,imp:151,clk:1,leads:0},
+  {date:'2025-12-05',camp:'Eng. Quente',invest:5.05,imp:331,clk:1,leads:1},
+  {date:'2025-12-05',camp:'Eng. Quente',invest:3.37,imp:156,clk:1,leads:0},
+  {date:'2025-12-06',camp:'Eng. Quente',invest:6.60,imp:431,clk:0,leads:1},
+  {date:'2025-12-06',camp:'Eng. Quente',invest:8.49,imp:446,clk:0,leads:0},
+  {date:'2025-12-07',camp:'Eng. Quente',invest:7.01,imp:327,clk:0,leads:1},
+  {date:'2025-12-07',camp:'Eng. Quente',invest:7.12,imp:348,clk:1,leads:0},
+  {date:'2025-12-08',camp:'Eng. Quente',invest:9.66,imp:495,clk:0,leads:0},
+  {date:'2025-12-08',camp:'Eng. Quente',invest:10.44,imp:436,clk:2,leads:2},
+  {date:'2025-12-09',camp:'Eng. Quente',invest:9.83,imp:544,clk:1,leads:1},
+  {date:'2025-12-09',camp:'Eng. Quente',invest:10.16,imp:445,clk:1,leads:0},
+  {date:'2025-12-10',camp:'Eng. Quente',invest:6.57,imp:380,clk:0,leads:1},
+  {date:'2025-12-10',camp:'Eng. Quente',invest:5.01,imp:240,clk:1,leads:1},
+  {date:'2025-12-11',camp:'Eng. Quente',invest:5.39,imp:336,clk:1,leads:0},
+  {date:'2025-12-11',camp:'Eng. Quente',invest:5.78,imp:260,clk:2,leads:0},
+  {date:'2025-12-12',camp:'Eng. Quente',invest:5.44,imp:273,clk:0,leads:2},
+  {date:'2025-12-12',camp:'Eng. Quente',invest:5.14,imp:171,clk:0,leads:1},
+  {date:'2025-12-13',camp:'Eng. Quente',invest:4.95,imp:294,clk:0,leads:0},
+  {date:'2025-12-13',camp:'Eng. Quente',invest:5.08,imp:222,clk:3,leads:0},
+  {date:'2025-12-14',camp:'Eng. Quente',invest:7.02,imp:397,clk:0,leads:0},
+  {date:'2025-12-14',camp:'Eng. Quente',invest:6.22,imp:232,clk:0,leads:0},
+  {date:'2025-12-15',camp:'Eng. Quente',invest:10.12,imp:492,clk:3,leads:1},
+  {date:'2025-12-15',camp:'Eng. Quente',invest:10.33,imp:323,clk:0,leads:0},
+  {date:'2025-12-16',camp:'Eng. Quente',invest:8.35,imp:474,clk:2,leads:0},
+  {date:'2025-12-16',camp:'Eng. Quente',invest:9.89,imp:365,clk:3,leads:1},
+  {date:'2025-12-17',camp:'Eng. Quente',invest:6.32,imp:284,clk:1,leads:1},
+  {date:'2025-12-17',camp:'Eng. Quente',invest:6.41,imp:274,clk:0,leads:0},
+  {date:'2025-12-18',camp:'Eng. Quente',invest:6.79,imp:373,clk:0,leads:1},
+  {date:'2025-12-18',camp:'Eng. Quente',invest:6.41,imp:266,clk:1,leads:1},
+  {date:'2025-12-19',camp:'Eng. Quente',invest:4.46,imp:293,clk:0,leads:1},
+  {date:'2025-12-19',camp:'Eng. Quente',invest:3.55,imp:174,clk:0,leads:0},
+  {date:'2025-12-20',camp:'Eng. Quente',invest:5.74,imp:402,clk:1,leads:0},
+  {date:'2025-12-20',camp:'Eng. Quente',invest:6.19,imp:324,clk:1,leads:0},
+  {date:'2025-12-21',camp:'Eng. Quente',invest:9.54,imp:552,clk:0,leads:1},
+  {date:'2025-12-21',camp:'Eng. Quente',invest:9.65,imp:432,clk:0,leads:0},
+  {date:'2025-12-22',camp:'Eng. Quente',invest:8.98,imp:530,clk:1,leads:2},
+  {date:'2025-12-22',camp:'Eng. Quente',invest:8.42,imp:394,clk:1,leads:1},
+  {date:'2025-12-23',camp:'Eng. Quente',invest:9.25,imp:611,clk:2,leads:0},
+  {date:'2025-12-23',camp:'Eng. Quente',invest:9.63,imp:476,clk:1,leads:1},
+  {date:'2025-12-24',camp:'Eng. Quente',invest:8.09,imp:433,clk:1,leads:0},
+  {date:'2025-12-24',camp:'Eng. Quente',invest:9.16,imp:319,clk:0,leads:0},
+  {date:'2025-12-25',camp:'Eng. Quente',invest:3.08,imp:202,clk:0,leads:0},
+  {date:'2025-12-25',camp:'Eng. Quente',invest:2.54,imp:106,clk:0,leads:0},
+  {date:'2025-12-26',camp:'Eng. Quente',invest:4.72,imp:439,clk:1,leads:0},
+  {date:'2025-12-26',camp:'Eng. Quente',invest:6.12,imp:202,clk:0,leads:0},
+  {date:'2025-12-27',camp:'Eng. Quente',invest:5.30,imp:400,clk:1,leads:0},
+  {date:'2025-12-27',camp:'Eng. Quente',invest:3.32,imp:242,clk:2,leads:0},
+  {date:'2025-12-28',camp:'Eng. Quente',invest:8.36,imp:775,clk:2,leads:0},
+  {date:'2025-12-28',camp:'Eng. Quente',invest:9.39,imp:551,clk:2,leads:0},
+  {date:'2025-12-29',camp:'Eng. Quente',invest:9.93,imp:744,clk:1,leads:1},
+  {date:'2025-12-29',camp:'Eng. Quente',invest:9.18,imp:460,clk:0,leads:0},
+  {date:'2025-12-30',camp:'Eng. Quente',invest:7.30,imp:515,clk:1,leads:2},
+  {date:'2025-12-30',camp:'Eng. Quente',invest:7.46,imp:457,clk:2,leads:0},
+  {date:'2025-12-31',camp:'Eng. Quente',invest:5.06,imp:373,clk:3,leads:0},
+  {date:'2025-12-31',camp:'Eng. Quente',invest:4.43,imp:286,clk:2,leads:0},
+  {date:'2026-01-01',camp:'Eng. Quente',invest:6.32,imp:541,clk:1,leads:0},
+  {date:'2026-01-01',camp:'Eng. Quente',invest:5.37,imp:462,clk:1,leads:0},
+  {date:'2026-01-02',camp:'Eng. Quente',invest:7.25,imp:511,clk:0,leads:2},
+  {date:'2026-01-02',camp:'Eng. Quente',invest:7.87,imp:473,clk:2,leads:0},
+  {date:'2026-01-03',camp:'Eng. Quente',invest:4.58,imp:434,clk:4,leads:0},
+  {date:'2026-01-03',camp:'Eng. Quente',invest:5.25,imp:441,clk:2,leads:1},
+  {date:'2026-01-04',camp:'Eng. Quente',invest:8.65,imp:581,clk:3,leads:1},
+  {date:'2026-01-04',camp:'Eng. Quente',invest:7.95,imp:466,clk:0,leads:0},
+  {date:'2026-01-05',camp:'Eng. Quente',invest:8.83,imp:479,clk:0,leads:0},
+  {date:'2026-01-05',camp:'Eng. Quente',invest:9.88,imp:645,clk:0,leads:0},
+  {date:'2026-01-06',camp:'Eng. Quente',invest:8.54,imp:450,clk:2,leads:0},
+  {date:'2026-01-06',camp:'Eng. Quente',invest:9.03,imp:389,clk:3,leads:1},
+  {date:'2026-01-07',camp:'Eng. Quente',invest:3.94,imp:248,clk:1,leads:1},
+  {date:'2026-01-07',camp:'Eng. Quente',invest:4.30,imp:216,clk:0,leads:2},
+  {date:'2026-02-10',camp:'Bioestimulador',invest:8.41,imp:459,clk:4,leads:2},
+  {date:'2026-02-11',camp:'Bioestimulador',invest:9.79,imp:483,clk:1,leads:1},
+  {date:'2026-02-12',camp:'Bioestimulador',invest:8.72,imp:462,clk:0,leads:1},
+  {date:'2026-02-13',camp:'Bioestimulador',invest:8.72,imp:503,clk:2,leads:1},
+  {date:'2026-02-14',camp:'Bioestimulador',invest:9.84,imp:524,clk:2,leads:3},
+  {date:'2026-02-15',camp:'Bioestimulador',invest:7.24,imp:492,clk:4,leads:1},
+  {date:'2026-02-16',camp:'Bioestimulador',invest:12.77,imp:724,clk:6,leads:5},
+  {date:'2026-02-17',camp:'Bioestimulador',invest:14.68,imp:526,clk:1,leads:2},
+  {date:'2026-02-18',camp:'Bioestimulador',invest:13.49,imp:454,clk:2,leads:0},
+  {date:'2026-02-19',camp:'Bioestimulador',invest:7.71,imp:345,clk:0,leads:0},
+  {date:'2026-02-20',camp:'Bioestimulador',invest:8.92,imp:354,clk:0,leads:1},
+  {date:'2026-02-20',camp:'Bioestimulador',invest:0.23,imp:37,clk:0,leads:0},
+  {date:'2026-02-21',camp:'Bioestimulador',invest:4.52,imp:254,clk:0,leads:0},
+  {date:'2026-02-21',camp:'Bioestimulador',invest:10.36,imp:752,clk:0,leads:0},
+  {date:'2026-02-22',camp:'Bioestimulador',invest:8.99,imp:356,clk:1,leads:0},
+  {date:'2026-02-22',camp:'Bioestimulador',invest:12.32,imp:948,clk:4,leads:1},
+  {date:'2026-02-23',camp:'Bioestimulador',invest:10.52,imp:349,clk:1,leads:1},
+  {date:'2026-02-23',camp:'Bioestimulador',invest:12.68,imp:679,clk:0,leads:0},
+  {date:'2026-02-24',camp:'Bioestimulador',invest:14.82,imp:556,clk:3,leads:3},
+  {date:'2026-02-24',camp:'Bioestimulador',invest:12.96,imp:660,clk:0,leads:0},
+  {date:'2026-02-25',camp:'Bioestimulador',invest:11.62,imp:457,clk:2,leads:1},
+  {date:'2026-02-25',camp:'Bioestimulador',invest:10.23,imp:577,clk:2,leads:2},
+  {date:'2026-02-26',camp:'Bioestimulador',invest:10.04,imp:381,clk:0,leads:1},
+  {date:'2026-02-26',camp:'Bioestimulador',invest:8.70,imp:553,clk:2,leads:1},
+  {date:'2026-02-27',camp:'Bioestimulador',invest:7.63,imp:354,clk:2,leads:0},
+  {date:'2026-02-27',camp:'Bioestimulador',invest:6.16,imp:435,clk:2,leads:0},
+  {date:'2026-02-28',camp:'Bioestimulador',invest:6.09,imp:300,clk:3,leads:1},
+  {date:'2026-02-28',camp:'Bioestimulador',invest:6.53,imp:426,clk:1,leads:0},
+  {date:'2026-03-01',camp:'Bioestimulador',invest:9.60,imp:490,clk:3,leads:1},
+  {date:'2026-03-01',camp:'Bioestimulador',invest:9.89,imp:628,clk:1,leads:0},
+  {date:'2026-03-02',camp:'Bioestimulador',invest:11.87,imp:532,clk:2,leads:2},
+  {date:'2026-03-02',camp:'Bioestimulador',invest:9.23,imp:596,clk:0,leads:0},
+  {date:'2026-03-03',camp:'Bioestimulador',invest:15.36,imp:626,clk:4,leads:1},
+  {date:'2026-03-03',camp:'Bioestimulador',invest:13.95,imp:908,clk:2,leads:1},
+  {date:'2026-03-04',camp:'Bioestimulador',invest:11.67,imp:418,clk:1,leads:2},
+  {date:'2026-03-04',camp:'Bioestimulador',invest:12.86,imp:679,clk:0,leads:0},
+  {date:'2026-03-05',camp:'Bioestimulador',invest:8.50,imp:365,clk:3,leads:4},
+  {date:'2026-03-05',camp:'Bioestimulador',invest:10.41,imp:553,clk:1,leads:2},
+  {date:'2026-03-06',camp:'Bioestimulador',invest:7.28,imp:299,clk:1,leads:0},
+  {date:'2026-03-06',camp:'Bioestimulador',invest:7.19,imp:450,clk:1,leads:1},
+  {date:'2026-03-07',camp:'Bioestimulador',invest:5.52,imp:257,clk:0,leads:0},
+  {date:'2026-03-07',camp:'Bioestimulador',invest:6.27,imp:407,clk:2,leads:0},
+  {date:'2026-03-08',camp:'Bioestimulador',invest:8.57,imp:379,clk:2,leads:1},
+  {date:'2026-03-08',camp:'Bioestimulador',invest:7.29,imp:579,clk:4,leads:1},
+  {date:'2026-03-09',camp:'Bioestimulador',invest:7.48,imp:216,clk:0,leads:1},
+  {date:'2026-03-09',camp:'Bioestimulador',invest:8.29,imp:360,clk:2,leads:1},
+  {date:'2026-03-10',camp:'Bioestimulador',invest:15.58,imp:508,clk:2,leads:1},
+  {date:'2026-03-10',camp:'Bioestimulador',invest:15.06,imp:745,clk:1,leads:1},
+  {date:'2026-03-11',camp:'Bioestimulador',invest:12.58,imp:480,clk:0,leads:0},
+  {date:'2026-03-11',camp:'Bioestimulador',invest:13.90,imp:652,clk:3,leads:0},
+  {date:'2026-03-12',camp:'Bioestimulador',invest:12.79,imp:284,clk:2,leads:0},
+  {date:'2026-03-12',camp:'Bioestimulador',invest:13.22,imp:540,clk:1,leads:1},
+  {date:'2026-03-13',camp:'Bioestimulador',invest:6.70,imp:259,clk:1,leads:1},
+  {date:'2026-03-13',camp:'Bioestimulador',invest:7.34,imp:259,clk:3,leads:2},
+  {date:'2026-03-14',camp:'Bioestimulador',invest:6.13,imp:300,clk:2,leads:1},
+  {date:'2026-03-14',camp:'Bioestimulador',invest:4.76,imp:267,clk:0,leads:0},
+  {date:'2026-03-15',camp:'Bioestimulador',invest:10.19,imp:354,clk:4,leads:2},
+  {date:'2026-03-15',camp:'Bioestimulador',invest:9.09,imp:429,clk:0,leads:0},
+  {date:'2026-03-16',camp:'Bioestimulador',invest:7.26,imp:350,clk:0,leads:0},
+  {date:'2026-03-16',camp:'Bioestimulador',invest:5.24,imp:192,clk:0,leads:0},
+  {date:'2026-03-17',camp:'Bioestimulador',invest:13.66,imp:533,clk:6,leads:0},
+  {date:'2026-03-17',camp:'Bioestimulador',invest:13.42,imp:689,clk:5,leads:1},
+  {date:'2026-03-18',camp:'Bioestimulador',invest:12.61,imp:625,clk:0,leads:0},
+  {date:'2026-03-18',camp:'Bioestimulador',invest:8.34,imp:341,clk:0,leads:0},
+  {date:'2026-03-19',camp:'Bioestimulador',invest:11.68,imp:477,clk:1,leads:1},
+  {date:'2026-03-20',camp:'Bioestimulador',invest:9.80,imp:374,clk:1,leads:6},
+  {date:'2026-03-21',camp:'Bioestimulador',invest:4.71,imp:279,clk:1,leads:1},
+  {date:'2026-03-22',camp:'Bioestimulador',invest:9.01,imp:472,clk:0,leads:1},
+  {date:'2026-03-23',camp:'Bioestimulador',invest:10.60,imp:387,clk:0,leads:1},
+  {date:'2026-03-24',camp:'Bioestimulador',invest:13.00,imp:608,clk:1,leads:0},
+  {date:'2026-03-25',camp:'Bioestimulador',invest:12.06,imp:582,clk:4,leads:2},
+  {date:'2026-03-26',camp:'Bioestimulador',invest:10.20,imp:633,clk:0,leads:2},
+  {date:'2026-03-27',camp:'Bioestimulador',invest:8.25,imp:488,clk:2,leads:0},
+  {date:'2026-03-28',camp:'Bioestimulador',invest:6.64,imp:476,clk:5,leads:1},
+  {date:'2026-03-29',camp:'Bioestimulador',invest:10.14,imp:600,clk:1,leads:0},
+  {date:'2026-03-30',camp:'Bioestimulador',invest:11.93,imp:528,clk:0,leads:0},
+  {date:'2026-03-30',camp:'Botox',invest:0.24,imp:20,clk:0,leads:0},
+  {date:'2026-03-31',camp:'Botox',invest:17.41,imp:690,clk:8,leads:3},
+  {date:'2026-04-01',camp:'Botox',invest:13.93,imp:921,clk:3,leads:1},
+  {date:'2026-04-02',camp:'Botox',invest:11.63,imp:696,clk:4,leads:2},
+  {date:'2026-04-03',camp:'Botox',invest:13.78,imp:764,clk:5,leads:2},
+  {date:'2026-04-04',camp:'Botox',invest:12.95,imp:717,clk:5,leads:1},
+  {date:'2026-04-05',camp:'Botox',invest:11.36,imp:616,clk:5,leads:1},
+  {date:'2026-04-06',camp:'Botox',invest:13.25,imp:524,clk:2,leads:7},
+  {date:'2026-04-07',camp:'Botox',invest:10.36,imp:465,clk:4,leads:1},
+  {date:'2026-04-08',camp:'Botox',invest:10.51,imp:604,clk:0,leads:0},
+  {date:'2026-04-09',camp:'Botox',invest:7.45,imp:452,clk:2,leads:1},
+  {date:'2026-04-10',camp:'Botox',invest:0.97,imp:40,clk:0,leads:0},
+  {date:'2026-04-10',camp:'Botox',invest:7.18,imp:505,clk:2,leads:2},
+  {date:'2026-04-10',camp:'Celulite',invest:1.12,imp:46,clk:0,leads:0},
+  {date:'2026-04-10',camp:'Gluteos',invest:0.67,imp:45,clk:1,leads:1},
+  {date:'2026-04-11',camp:'Botox',invest:10.34,imp:668,clk:5,leads:0},
+  {date:'2026-04-11',camp:'Celulite',invest:8.05,imp:402,clk:2,leads:0},
+  {date:'2026-04-11',camp:'Gluteos',invest:8.59,imp:614,clk:6,leads:0},
+  {date:'2026-04-12',camp:'Botox',invest:8.55,imp:607,clk:2,leads:0},
+  {date:'2026-04-12',camp:'Celulite',invest:8.02,imp:393,clk:3,leads:1},
+  {date:'2026-04-12',camp:'Gluteos',invest:8.45,imp:341,clk:0,leads:0},
+  {date:'2026-04-13',camp:'Botox',invest:8.45,imp:548,clk:2,leads:0},
+  {date:'2026-04-13',camp:'Celulite',invest:5.18,imp:338,clk:1,leads:1},
+  {date:'2026-04-13',camp:'Gluteos',invest:7.75,imp:417,clk:0,leads:0},
+  {date:'2026-04-14',camp:'Botox',invest:12.37,imp:709,clk:6,leads:1},
+  {date:'2026-04-14',camp:'Celulite',invest:9.85,imp:561,clk:2,leads:0},
+  {date:'2026-04-14',camp:'Gluteos',invest:10.85,imp:450,clk:3,leads:0},
+  {date:'2026-04-15',camp:'Botox',invest:12.24,imp:650,clk:2,leads:0},
+  {date:'2026-04-15',camp:'Celulite',invest:10.47,imp:644,clk:6,leads:0},
+  {date:'2026-04-15',camp:'Gluteos',invest:9.11,imp:436,clk:3,leads:0},
+  {date:'2026-04-16',camp:'Botox',invest:11.96,imp:641,clk:3,leads:0},
+  {date:'2026-04-16',camp:'Celulite',invest:9.23,imp:514,clk:0,leads:0},
+  {date:'2026-04-16',camp:'Gluteos',invest:8.99,imp:402,clk:1,leads:0},
+  {date:'2026-04-17',camp:'Botox',invest:12.32,imp:699,clk:5,leads:2},
+  {date:'2026-04-17',camp:'Celulite',invest:11.01,imp:586,clk:1,leads:0},
+  {date:'2026-04-17',camp:'Gluteos',invest:9.36,imp:451,clk:2,leads:2},
+  {date:'2026-04-18',camp:'Botox',invest:10.33,imp:732,clk:7,leads:3},
+  {date:'2026-04-18',camp:'Celulite',invest:8.68,imp:596,clk:2,leads:1},
+  {date:'2026-04-18',camp:'Gluteos',invest:7.66,imp:443,clk:0,leads:0},
+  {date:'2026-04-19',camp:'Botox',invest:10.40,imp:570,clk:5,leads:0},
+  {date:'2026-04-19',camp:'Celulite',invest:8.03,imp:367,clk:1,leads:1},
+  {date:'2026-04-19',camp:'Gluteos',invest:9.32,imp:380,clk:1,leads:0},
+  {date:'2026-04-20',camp:'Botox',invest:11.57,imp:600,clk:1,leads:1},
+  {date:'2026-04-20',camp:'Celulite',invest:5.75,imp:219,clk:0,leads:0},
+  {date:'2026-04-20',camp:'Gluteos',invest:10.63,imp:428,clk:0,leads:0},
+  {date:'2026-04-21',camp:'Botox',invest:11.78,imp:803,clk:5,leads:0},
+  {date:'2026-04-21',camp:'Celulite',invest:8.99,imp:419,clk:3,leads:0},
+  {date:'2026-04-21',camp:'Gluteos',invest:8.37,imp:443,clk:3,leads:0},
+  {date:'2026-04-22',camp:'Botox',invest:12.12,imp:703,clk:3,leads:0},
+  {date:'2026-04-22',camp:'Celulite',invest:11.13,imp:584,clk:4,leads:2},
+  {date:'2026-04-22',camp:'Gluteos',invest:9.38,imp:462,clk:4,leads:0},
+  {date:'2026-04-23',camp:'Botox',invest:11.51,imp:482,clk:5,leads:0},
+  {date:'2026-04-23',camp:'Celulite',invest:11.38,imp:655,clk:2,leads:2},
+  {date:'2026-04-23',camp:'Gluteos',invest:10.64,imp:353,clk:3,leads:0},
+  {date:'2026-04-24',camp:'Botox',invest:9.62,imp:596,clk:3,leads:2},
+  {date:'2026-04-24',camp:'Celulite',invest:10.15,imp:468,clk:1,leads:0},
+  {date:'2026-04-24',camp:'Gluteos',invest:7.45,imp:343,clk:1,leads:0},
+  {date:'2026-04-25',camp:'Botox',invest:9.52,imp:560,clk:3,leads:0},
+  {date:'2026-04-25',camp:'Celulite',invest:6.68,imp:447,clk:3,leads:0},
+  {date:'2026-04-25',camp:'Gluteos',invest:6.52,imp:361,clk:2,leads:0},
+  {date:'2026-04-26',camp:'Botox',invest:11.14,imp:570,clk:2,leads:0},
+  {date:'2026-04-26',camp:'Celulite',invest:8.67,imp:522,clk:1,leads:0},
+  {date:'2026-04-26',camp:'Gluteos',invest:8.74,imp:449,clk:4,leads:0},
+  {date:'2026-04-27',camp:'Botox',invest:13.06,imp:686,clk:2,leads:2},
+  {date:'2026-04-27',camp:'Celulite',invest:9.71,imp:530,clk:3,leads:2},
+  {date:'2026-04-27',camp:'Gluteos',invest:8.47,imp:459,clk:2,leads:0},
+  {date:'2026-04-28',camp:'Botox',invest:9.07,imp:574,clk:0,leads:1},
+  {date:'2026-04-28',camp:'Celulite',invest:7.67,imp:532,clk:1,leads:0},
+  {date:'2026-04-28',camp:'Gluteos',invest:9.30,imp:487,clk:2,leads:0},
+  {date:'2026-04-29',camp:'Botox',invest:6.94,imp:361,clk:3,leads:0},
+  {date:'2026-04-29',camp:'Celulite',invest:4.31,imp:239,clk:0,leads:0},
+  {date:'2026-04-29',camp:'Gluteos',invest:3.05,imp:141,clk:0,leads:0}
+];
+
+const BRL=v=>v==null||isNaN(v)?'—':'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const NUM=v=>v==null?'—':v.toLocaleString('pt-BR');
+const PCT=v=>v==null||isNaN(v)?'—':v.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+const S=(id,h)=>{const e=document.getElementById(id);if(e)e.innerHTML=h;};
+const TODAY='2026-04-29';
+
+function filterData(p){
+  if(p==='all')return RAW;
+  const t=new Date(TODAY),c=new Date(t);c.setDate(t.getDate()-(p-1));
+  return RAW.filter(r=>r.date>=c.toISOString().slice(0,10));
+}
+function setPreset(p,btn){
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render(filterData(p));
+}
+function setCustomRange(){
+  const from=document.getElementById('dtFrom').value;
+  const to=document.getElementById('dtTo').value;
+  if(!from||!to)return;
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+  render(RAW.filter(r=>r.date>=from&&r.date<=to));
+}
+
+function agg(data){
+  const tot={invest:0,imp:0,clk:0,leads:0};
+  const by={'Eng. Quente':{invest:0,imp:0,clk:0,leads:0},'Bioestimulador':{invest:0,imp:0,clk:0,leads:0},'Botox':{invest:0,imp:0,clk:0,leads:0},'Cel+Glu':{invest:0,imp:0,clk:0,leads:0}};
+  data.forEach(r=>{
+    tot.invest+=r.invest;tot.imp+=r.imp;tot.clk+=r.clk;tot.leads+=r.leads;
+    const k=(r.camp==='Celulite'||r.camp==='Gluteos')?'Cel+Glu':r.camp;
+    if(by[k]){by[k].invest+=r.invest;by[k].imp+=r.imp;by[k].clk+=r.clk;by[k].leads+=r.leads;}
+  });
+  return {tot,by};
+}
+
+let ch1=null,ch2=null;
+function buildCharts(data){
+  const days=[...new Set(data.map(r=>r.date))].sort();
+  const dI=days.map(d=>data.filter(r=>r.date===d).reduce((s,r)=>s+r.invest,0));
+  const dC=days.map(d=>data.filter(r=>r.date===d).reduce((s,r)=>s+r.clk,0));
+  const dL=days.map(d=>data.filter(r=>r.date===d).reduce((s,r)=>s+r.leads,0));
+  const labs=days.map(d=>d.slice(8)+'/'+d.slice(5,7));
+  Chart.register(ChartDataLabels);
+  const gc='#C9A65A',mc='#7a6840';
+  const cfg={responsive:true,maintainAspectRatio:true,plugins:{datalabels:{display:false},legend:{position:'bottom',labels:{color:mc,font:{family:'Nunito',size:11},padding:16,boxWidth:14}},tooltip:{backgroundColor:'#1c1710',titleColor:gc,bodyColor:'#F0E6CC',borderColor:'#2e2518',borderWidth:1}},scales:{x:{ticks:{color:mc,font:{family:'Nunito'}},grid:{color:'rgba(201,166,90,0.06)'}}}};
+  if(ch1)ch1.destroy();
+  ch1=new Chart(document.getElementById('chDaily'),{type:'bar',data:{labels:labs,datasets:[
+    {label:'Leads',data:dL,backgroundColor:'rgba(52,211,153,.75)',borderRadius:5,yAxisID:'y1',order:3,datalabels:{display:true,anchor:'end',align:'top',offset:4,color:'#34d399',font:{family:'Nunito',size:10,weight:'900'},formatter:v=>v>0?v+'L':'',backgroundColor:'rgba(20,16,8,0.8)',borderRadius:4,padding:{top:2,bottom:2,left:4,right:4}}},
+    {label:'Investimento (R$)',data:dI,type:'line',borderColor:'#C9A65A',borderWidth:2,backgroundColor:'rgba(201,166,90,0.08)',tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'#C9A65A',pointBorderColor:'#0a0806',pointBorderWidth:2,yAxisID:'y2',order:1,datalabels:{display:false}},
+    {label:'Cliques',data:dC,type:'line',borderColor:'#60a5fa',borderWidth:2,backgroundColor:'transparent',tension:.4,pointRadius:3,pointBackgroundColor:'#60a5fa',pointBorderColor:'#0a0806',pointBorderWidth:2,yAxisID:'y2',order:2,datalabels:{display:false}},
+  ]},options:{...cfg,scales:{x:cfg.scales.x,y1:{position:'left',beginAtZero:true,suggestedMax:8,ticks:{color:mc,font:{family:'Nunito'},stepSize:1,callback:v=>v+' L'},grid:{color:'rgba(201,166,90,0.06)'}},y2:{position:'right',ticks:{color:mc,font:{family:'Nunito'}},grid:{display:false}}}}});
+  const camps=['Eng. Quente','Bioestimulador','Botox','Celulite','Gluteos'];
+  const lbc=camps.map(c=>data.filter(r=>r.camp===c).reduce((s,r)=>s+r.leads,0));
+  if(ch2)ch2.destroy();
+  ch2=new Chart(document.getElementById('chLeads'),{type:'doughnut',data:{labels:camps,datasets:[{data:lbc,backgroundColor:['rgba(201,166,90,.85)','rgba(52,211,153,.85)','rgba(96,165,250,.85)','rgba(244,114,182,.85)','rgba(167,139,250,.85)'],borderColor:'#0a0806',borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{datalabels:{color:'#0a0806',font:{family:'Nunito',size:11,weight:'900'},formatter:(v,ctx)=>v>0?camps[ctx.dataIndex].split('.').pop().trim()+'\n'+v:''},legend:{position:'bottom',labels:{color:'#7a6840',font:{family:'Nunito',size:11},padding:12,boxWidth:12}},tooltip:{backgroundColor:'#1c1710',titleColor:'#C9A65A',bodyColor:'#F0E6CC',borderColor:'#2e2518',borderWidth:1}}}});
+}
+
+function buildTable(data){
+  const sorted=[...data].sort((a,b)=>b.date.localeCompare(a.date));
+  const cbMap={'Eng. Quente':'pq','Eng. Frio':'pf','Bioestimulador':'pbio','Botox':'pbtx','Celulite':'pcel','Gluteos':'pglu'};
+  document.getElementById('gtbody').innerHTML=sorted.map(r=>{
+    const cpc=r.clk>0?r.invest/r.clk:null;
+    const cpl=r.leads>0?r.invest/r.leads:null;
+    const ds=r.date.slice(8)+'/'+r.date.slice(5,7)+'/'+r.date.slice(0,4);
+    return `<tr><td>${ds}</td><td><span class="bp ${cbMap[r.camp]||'pf'}">${r.camp}</span></td><td>${BRL(r.invest)}</td><td>${NUM(r.imp)}</td><td>${NUM(r.clk)}</td><td style="color:#34d399;font-weight:800">${r.leads}</td><td>${BRL(cpc)}</td><td>${BRL(cpl)}</td></tr>`;
+  }).join('');
+}
+
+function render(data){
+  const {tot,by}=agg(data);
+  const days=new Set(data.map(r=>r.date)).size||1;
+  S('kI',BRL(tot.invest));S('kIs',days+' dias · '+BRL(tot.invest/days)+'/dia');
+  S('kIm',NUM(tot.imp));S('kIms',NUM(Math.round(tot.imp/days))+'/dia');
+  S('kC',NUM(tot.clk));S('kCs',NUM(Math.round(tot.clk/days))+'/dia');
+  S('kL',tot.leads);S('kLs',tot.leads>0?(tot.leads/days).toFixed(1)+'/dia':'0/dia');
+  const cpc=tot.clk>0?tot.invest/tot.clk:null;
+  const cpl=tot.leads>0?tot.invest/tot.leads:null;
+  S('kCpc',BRL(cpc));S('kCpl',BRL(cpl));
+  [['Q','Eng. Quente'],['B','Bioestimulador'],['X','Botox'],['G','Cel+Glu']].forEach(([p,k])=>{
+    const c=by[k];
+    S('c'+p+'i',BRL(c.invest));S('c'+p+'d',BRL(c.invest/days)+'/dia');
+    S('c'+p+'c',NUM(c.clk));S('c'+p+'l',c.leads);S('c'+p+'m',NUM(c.imp));
+    S('c'+p+'p',c.leads>0?BRL(c.invest/c.leads):'—');
+    const b=document.getElementById('c'+p+'b');if(b)b.style.width=(tot.invest>0?c.invest/tot.invest*100:0).toFixed(1)+'%';
+  });
+  S('cTi',BRL(tot.invest));S('cTd',BRL(tot.invest/days)+'/dia');
+  S('cTc',NUM(tot.clk));S('cTl',tot.leads);S('cTm',NUM(tot.imp));S('cTp',BRL(cpl));
+  document.getElementById('cTb').style.width='100%';
+  const ctr=tot.imp>0?tot.clk/tot.imp*100:null;
+  const conv=tot.clk>0?tot.leads/tot.clk*100:null;
+  S('fI',NUM(tot.imp));S('fC',NUM(tot.clk));S('fL',tot.leads);
+  S('fCtr',PCT(ctr));S('fConv',PCT(conv));
+  S('frCtr',PCT(ctr));S('frConv',PCT(conv));S('frCpc',BRL(cpc));S('frCpl',BRL(cpl));
+  buildCharts(data);buildTable(data);
+}
+render(RAW);
+</script>
+</body>
+</html>
